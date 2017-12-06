@@ -2,7 +2,7 @@ package mysql
 
 import (
 	"database/sql"
-	_ "github.com/Go-SQL-Driver/MySQL"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/wiloon/wiloon-log/log"
 )
 
