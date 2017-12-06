@@ -79,3 +79,13 @@ func (db *Database) Find(stmt string, args ...interface{}) []map[string]interfac
 	}
 	return result
 }
+
+func (db *Database) Save(stmt string, args ...interface{}) {
+
+	result, err := db.conn.Exec(stmt, args...)
+	if err != nil {
+		log.Info("failed to query, sql:%v, err:%v", stmt, err)
+	}
+	log.Info("result:", result)
+
+}
