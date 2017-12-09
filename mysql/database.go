@@ -45,7 +45,7 @@ func (db *Database) Count(table string) int {
 
 func (db *Database) Find(stmt string, args ...interface{}) []map[string]interface{} {
 	var result []map[string]interface{}
-	log.Info("sql:%v, args:%v", stmt, args)
+	log.Debug("sql:%v, args:%v", stmt, args)
 	rows, err := db.conn.Query(stmt, args...)
 	if err != nil {
 		log.Info("failed to query, sql:%v, err:%v", stmt, err)
