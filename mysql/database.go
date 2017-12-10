@@ -86,6 +86,6 @@ func (db *Database) Save(stmt string, args ...interface{}) {
 	if err != nil {
 		log.Info("failed to query, sql:%v, err:%v", stmt, err)
 	}
-	log.Debug("result:", result)
-
+	rowsAffected, _ := result.RowsAffected()
+	log.Debug("rows affected:", rowsAffected)
 }
