@@ -20,7 +20,7 @@ func (db *Database) Connect() {
 	conf := db.conf
 	conn, err := sql.Open("mysql", conf.Username+":"+conf.Password+"@tcp("+conf.Address+")/"+conf.DatabaseName+"?charset=utf8")
 	if err != nil {
-		log.Info("failed to connect %v, err:%v", conf.DatabaseName, err)
+		log.Infof("failed to connect %v, err:%v", conf.DatabaseName, err)
 	}
 	db.conn = conn
 }
@@ -33,7 +33,7 @@ func (db *Database) Count(table string) int {
 	stmt := "select count(*) as c from " + table
 	rows, err := db.conn.Query(stmt)
 	if err != nil {
-		log.Info("failed to query, sql:%v, err:%v", stmt, err)
+		log.Infof("failed to query, sql:%v, err:%v", stmt, err)
 	}
 	defer rows.Close()
 	var c int
@@ -45,10 +45,10 @@ func (db *Database) Count(table string) int {
 
 func (db *Database) Find(stmt string, args ...interface{}) []map[string]interface{} {
 	var result []map[string]interface{}
-	log.Debug("sql:%v, args:%v", stmt, args)
+	log.Debugf("sql:%v, args:%v", stmt, args)
 	rows, err := db.conn.Query(stmt, args...)
 	if err != nil {
-		log.Info("failed to query, sql:%v, err:%v", stmt, err)
+		log.Infof("failed to query, sql:%v, err:%v", stmt, err)
 	}
 	defer rows.Close()
 
@@ -66,7 +66,7 @@ func (db *Database) Find(stmt string, args ...interface{}) []map[string]interfac
 
 		// Scan the result into the column pointers...
 		if err := rows.Scan(columnPointers...); err != nil {
-			log.Info("failed to scan rows.", err)
+			log.Infof("failed to scan rows.", err)
 		}
 
 		// Create our map, and retrieve the value for each column from the pointers slice,
@@ -84,8 +84,8 @@ func (db *Database) Save(stmt string, args ...interface{}) {
 
 	result, err := db.conn.Exec(stmt, args...)
 	if err != nil {
-		log.Info("failed to query, sql:%v, err:%v", stmt, err)
+		log.Infof("failed to query, sql:%v, err:%v", stmt, err)
 	}
 	rowsAffected, _ := result.RowsAffected()
-	log.Debug("rows affected:", rowsAffected)
+	log.Debugf("rows affected:", rowsAffected)
 }
