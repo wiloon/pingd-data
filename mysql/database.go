@@ -3,7 +3,7 @@ package mysql
 import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/wiloon/wiloon-log/log"
+	log "github.com/sirupsen/logrus"
 )
 
 type Database struct {
