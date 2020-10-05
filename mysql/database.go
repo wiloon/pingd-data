@@ -3,7 +3,7 @@ package mysql
 import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
-	log "github.com/sirupsen/logrus"
+	log "github.com/wiloon/pingd-log/logconfig/zaplog"
 )
 
 type Database struct {
@@ -11,13 +11,14 @@ type Database struct {
 	conn *sql.DB
 }
 
-func NewDatabase(config Config) Database {
-	db := Database{conf: config}
+func NewDatabase(config Config) *Database {
+	db := &Database{conf: config}
 	db.Connect()
 	return db
 }
 func (db *Database) Connect() {
 	conf := db.conf
+	log.Infof("connecting mysql, config: %v", conf)
 	conn, err := sql.Open("mysql", conf.Username+":"+conf.Password+"@tcp("+conf.Address+")/"+conf.DatabaseName+"?charset=utf8")
 	if err != nil {
 		log.Infof("failed to connect %v, err:%v", conf.DatabaseName, err)
@@ -66,7 +67,7 @@ func (db *Database) Find(stmt string, args ...interface{}) []map[string]interfac
 
 		// Scan the result into the column pointers...
 		if err := rows.Scan(columnPointers...); err != nil {
-			log.Infof("failed to scan rows.", err)
+			log.Infof("failed to scan rows: %v", err)
 		}
 
 		// Create our map, and retrieve the value for each column from the pointers slice,
@@ -87,5 +88,5 @@ func (db *Database) Save(stmt string, args ...interface{}) {
 		log.Infof("failed to query, sql:%v, err:%v", stmt, err)
 	}
 	rowsAffected, _ := result.RowsAffected()
-	log.Debugf("rows affected:", rowsAffected)
+	log.Debugf("rows affected: %v", rowsAffected)
 }
